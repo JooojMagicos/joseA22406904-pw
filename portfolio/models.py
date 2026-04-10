@@ -87,3 +87,22 @@ class MakingOf(models.Model):
     data_registo = models.DateField(auto_now_add=True)
     uso_ia = models.TextField(blank=True)
     fase = models.CharField(max_length=50)
+
+class Evento(models.Model):
+    TIPO_CHOICES = [
+        ('hackathon', 'Hackathon'),
+        ('conferencia', 'Conferência'),
+        ('workshop', 'Workshop'),
+        ('webinar', 'Webinar'),
+        ('outro', 'Outro'),
+    ]
+    nome = models.CharField(max_length=200)
+    tipo = models.CharField(max_length=50, choices=TIPO_CHOICES)
+    descricao = models.TextField(blank=True)
+    data_inicio = models.DateField()
+    data_fim = models.DateField(null=True, blank=True)
+    local = models.CharField(max_length=200, blank=True)
+    certificado = models.FileField(upload_to='eventos/certificados/', blank=True)
+    imagem = models.ImageField(upload_to='eventos/', blank=True)
+    tecnologias = models.ManyToManyField('Tecnologia', blank=True, related_name='eventos')
+    

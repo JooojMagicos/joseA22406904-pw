@@ -40,10 +40,6 @@ INSTALLED_APPS = [
     "pessoas",
     "escola",
     "portfolio",
-<<<<<<< HEAD:project/settings.py
-=======
-
->>>>>>> 15d478156b7770cd0959aa31aef397fbcacd4e61:config/settings.py
 ]
 
 MIDDLEWARE = [
