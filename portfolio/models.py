@@ -8,12 +8,16 @@ class Licenciatura(models.Model):
     area_cientifica = models.CharField(max_length=100)
     url_site = models.URLField()
 
+    def __str__(self):
+        return self.nome
+
 class Docente(models.Model):
     nome = models.CharField(max_length=200)
     email = models.EmailField()
     titulo = models.CharField(max_length=50)
 
-
+    def __str__(self):
+        return self.nome
 
 class UnidadeCurricular(models.Model):
     licenciatura = models.ForeignKey(Licenciatura, on_delete=models.CASCADE)
@@ -25,11 +29,17 @@ class UnidadeCurricular(models.Model):
     semestre = models.CharField(max_length=10)
     descricao = models.TextField()
 
+    def __str__(self):
+        return f"{self.codigo} — {self.nome}"
+
 class Tecnologia(models.Model):
     nome = models.CharField(max_length=100)
     categoria = models.CharField(max_length=50)
     descricao = models.TextField()
     versao = models.CharField(max_length=20, blank=True)
+
+    def __str__(self):
+        return self.nome
 
 class Projeto(models.Model):
     uc = models.ForeignKey(UnidadeCurricular, on_delete=models.CASCADE)
@@ -39,14 +49,18 @@ class Projeto(models.Model):
     conceitos_uc = models.TextField()
     ano = models.IntegerField()
 
+    def __str__(self):
+        return self.titulo
 
 class Avaliacao(models.Model):
     uc = models.ForeignKey(UnidadeCurricular, on_delete=models.CASCADE, related_name='avaliacoes')
-    ano_letivo = models.IntegerField()  
-    semestre = models.CharField(max_length=10) 
+    ano_letivo = models.IntegerField()
+    semestre = models.CharField(max_length=10)
     nota_media = models.DecimalField(max_digits=4, decimal_places=2)
     nr_alunos = models.IntegerField()
-  
+
+    def __str__(self):
+        return f"{self.uc} — {self.ano_letivo} {self.semestre}"
 
 class TFC(models.Model):
     tecnologias = models.ManyToManyField(Tecnologia, related_name='tfcs')
@@ -58,6 +72,9 @@ class TFC(models.Model):
     area_tematica = models.CharField(max_length=100)
     keywords = models.CharField(max_length=300)
 
+    def __str__(self):
+        return self.titulo
+
 class Competencia(models.Model):
     projetos = models.ManyToManyField(Projeto, blank=True)
     tecnologias = models.ManyToManyField(Tecnologia, blank=True)
@@ -66,7 +83,8 @@ class Competencia(models.Model):
     tipo = models.CharField(max_length=50)
     descricao = models.TextField()
 
-
+    def __str__(self):
+        return self.nome
 
 class Formacao(models.Model):
     licenciatura = models.ForeignKey(Licenciatura, null=True, blank=True, on_delete=models.SET_NULL)
@@ -76,6 +94,9 @@ class Formacao(models.Model):
     data_inicio = models.DateField()
     data_fim = models.DateField(null=True, blank=True)
     descricao = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.nome
 
 class MakingOf(models.Model):
     entidade_relacionada = models.CharField(max_length=50)
@@ -87,6 +108,9 @@ class MakingOf(models.Model):
     data_registo = models.DateField(auto_now_add=True)
     uso_ia = models.TextField(blank=True)
     fase = models.CharField(max_length=50)
+
+    def __str__(self):
+        return f"{self.entidade_relacionada} — {self.fase}"
 
 class Evento(models.Model):
     TIPO_CHOICES = [
@@ -105,4 +129,6 @@ class Evento(models.Model):
     certificado = models.FileField(upload_to='eventos/certificados/', blank=True)
     imagem = models.ImageField(upload_to='eventos/', blank=True)
     tecnologias = models.ManyToManyField('Tecnologia', blank=True, related_name='eventos')
-    
+
+    def __str__(self):
+        return self.nome
