@@ -1,0 +1,28 @@
+{% extends 'portfolio/base.html' %}
+{% block title %}Disciplinas{% endblock %}
+
+{% block content %}
+<h1>{{ titulo }}</h1>
+<table>
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Nome</th>
+            <th>Curso</th>
+            <th>Ano</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for d in disciplinas %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ d.nome }}</td>
+            <td>{{ d.curso }}</td>
+            <td>{{ d.ano }}º ano</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4" class="empty">Nenhuma disciplina registada.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

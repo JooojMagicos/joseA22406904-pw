@@ -1,0 +1,28 @@
+{% extends 'portfolio/base.html' %}
+{% block title %}Eventos{% endblock %}
+{% block content %}
+<h1>{{ titulo }}</h1>
+<table>
+    <thead>
+        <tr><th>#</th><th>Nome</th><th>Tipo</th><th>Data Início</th><th>Local</th><th>Tecnologias</th></tr>
+    </thead>
+    <tbody>
+        {% for e in eventos %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td><strong>{{ e.nome }}</strong></td>
+            <td><span class="badge">{{ e.get_tipo_display }}</span></td>
+            <td>{{ e.data_inicio }}</td>
+            <td>{{ e.local|default:"—" }}</td>
+            <td>
+                {% for tec in e.tecnologias.all %}
+                    <span class="badge">{{ tec.nome }}</span>
+                {% empty %}—{% endfor %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6" class="empty">Nenhum evento registado.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'portfolio/base.html' %}
+{% block title %}TFCs{% endblock %}
+{% block content %}
+<h1>{{ titulo }}</h1>
+<table>
+    <thead>
+        <tr><th>#</th><th>Título</th><th>Orientador</th><th>Ano</th><th>Área Temática</th><th>Tecnologias</th></tr>
+    </thead>
+    <tbody>
+        {% for t in tfcs %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>
+                <strong>{{ t.titulo }}</strong><br>
+                <small style="color:#888;">{{ t.keywords }}</small>
+            </td>
+            <td>{{ t.orientador }}</td>
+            <td>{{ t.ano }}</td>
+            <td>{{ t.area_tematica }}</td>
+            <td>
+                {% for tec in t.tecnologias.all %}
+                    <span class="badge">{{ tec.nome }}</span>
+                {% empty %}—{% endfor %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6" class="empty">Nenhum TFC registado.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

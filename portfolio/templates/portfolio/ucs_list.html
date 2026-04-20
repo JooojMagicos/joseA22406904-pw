@@ -1,0 +1,25 @@
+{% extends 'portfolio/base.html' %}
+{% block title %}Unidades Curriculares{% endblock %}
+{% block content %}
+<h1>{{ titulo }}</h1>
+<table>
+    <thead>
+        <tr><th>#</th><th>Código</th><th>Nome</th><th>Licenciatura</th><th>Ano</th><th>Semestre</th><th>ECTS</th></tr>
+    </thead>
+    <tbody>
+        {% for uc in ucs %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td><span class="badge badge-gray">{{ uc.codigo }}</span></td>
+            <td><strong>{{ uc.nome }}</strong></td>
+            <td>{{ uc.licenciatura }}</td>
+            <td>{{ uc.ano_curricular }}º</td>
+            <td>{{ uc.semestre }}</td>
+            <td>{{ uc.ects }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7" class="empty">Nenhuma UC registada.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

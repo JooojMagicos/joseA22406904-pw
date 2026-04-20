@@ -1,0 +1,23 @@
+{% extends 'portfolio/base.html' %}
+{% block title %}Tecnologias{% endblock %}
+{% block content %}
+<h1>{{ titulo }}</h1>
+<table>
+    <thead>
+        <tr><th>#</th><th>Nome</th><th>Categoria</th><th>Versão</th><th>Descrição</th></tr>
+    </thead>
+    <tbody>
+        {% for t in tecnologias %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td><strong>{{ t.nome }}</strong></td>
+            <td><span class="badge">{{ t.categoria }}</span></td>
+            <td>{{ t.versao|default:"—" }}</td>
+            <td>{{ t.descricao|truncatewords:15 }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5" class="empty">Nenhuma tecnologia registada.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,52 @@
+<!-- templates/escola/cursos.html -->
+{% extends "escola/base.html" %}
+
+{% block title %}Cursos - Escola{% endblock %}
+
+{% block extra_head %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/cursos.css' %}">
+{% endblock %}
+
+{% block content %}
+    <h1>Cursos</h1>
+
+    <div class="cursos-grid">
+        {% for curso in cursos %}
+            <article class="curso-card">
+                <header>
+                    {% if curso.imagem %}
+                        <img src="{{ curso.imagem.url }}" 
+                             alt="{{ curso.nome }}"
+                             class="curso-imagem">
+                    {% endif %}
+                    
+                    <h2>{{ curso.nome }}</h2>
+                    <p class="professor">
+                        <strong>Professor:</strong> {{ curso.professor.nome }}
+                    </p>
+                </header>
+
+                <section class="alunos">
+                    <h3>Alunos inscritos</h3>
+                    <ul>
+                        {% for aluno in curso.alunos.all %}
+                            <li>{{ aluno.nome }}</li>
+                        {% empty %}
+                            <li class="empty">Nenhum aluno inscrito ainda.</li>
+                        {% endfor %}
+                    </ul>
+                </section>
+
+                {% if user.is_staff %}
+                    <footer class="acoes">
+                        <a href="{% url 'curso_editar' curso.pk %}" class="btn btn-edit">Editar</a>
+                        <a href="{% url 'curso_excluir' curso.pk %}" class="btn btn-delete">Excluir</a>
+                    </footer>
+                {% endif %}
+            </article>
+        {% empty %}
+            <p>Nenhum curso cadastrado.</p>
+        {% endfor %}
+    </div>
+{% endblock %}

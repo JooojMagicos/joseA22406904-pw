@@ -1,0 +1,24 @@
+{% extends 'portfolio/base.html' %}
+{% block title %}Licenciaturas{% endblock %}
+{% block content %}
+<h1>{{ titulo }}</h1>
+<table>
+    <thead>
+        <tr><th>#</th><th>Nome</th><th>Grau</th><th>Área Científica</th><th>Duração</th><th>ECTS Total</th></tr>
+    </thead>
+    <tbody>
+        {% for l in licenciaturas %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td><strong>{{ l.nome }}</strong></td>
+            <td><span class="badge">{{ l.grau }}</span></td>
+            <td>{{ l.area_cientifica }}</td>
+            <td>{{ l.duracao_anos }} anos</td>
+            <td>{{ l.ects_total }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6" class="empty">Nenhuma licenciatura registada.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

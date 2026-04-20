@@ -1,0 +1,24 @@
+{% extends 'portfolio/base.html' %}
+{% block title %}Formações{% endblock %}
+{% block content %}
+<h1>{{ titulo }}</h1>
+<table>
+    <thead>
+        <tr><th>#</th><th>Nome</th><th>Instituição</th><th>Tipo</th><th>Início</th><th>Fim</th></tr>
+    </thead>
+    <tbody>
+        {% for f in formacoes %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td><strong>{{ f.nome }}</strong></td>
+            <td>{{ f.instituicao }}</td>
+            <td><span class="badge badge-gray">{{ f.tipo }}</span></td>
+            <td>{{ f.data_inicio }}</td>
+            <td>{{ f.data_fim|default:"Em curso" }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6" class="empty">Nenhuma formação registada.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
