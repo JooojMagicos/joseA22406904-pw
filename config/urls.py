@@ -23,6 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("escola/", include("escola.urls")), 
     path('portfolio/', include('portfolio.urls', namespace='portfolio')),    
+    path('accounts/', include('accounts.urls', namespace='accounts'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # Serve ficheiros media em DEBUG

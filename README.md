@@ -12,3 +12,6 @@ usei IA (claude e chatGPT) para:
 
 LAB 7
 Fiz a integraçao da bd do portfolio com as views em html, entretanto, nao conseguir fazer a parte do css de jeito nenhum, dito isso, pedi pra ia fazer dentro do próprio html como alternativa.
+
+LAB 9
+Implementei autenticação por username e password. Criei a aplicação accounts com as views de login, logout e registo, usando as funções utilitárias do django (authenticate, login, logout) e o UserCreationForm como base do formulário de registo. O navbar do base.html foi atualizado para mostrar o nome do utilizador e o link de logout quando autenticado, ou os links de login e registo quando não autenticado.

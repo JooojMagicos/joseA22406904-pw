@@ -1,0 +1,15 @@
+{% extends 'portfolio/base.html' %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<h1>Login</h1>  
+{% if erro %}
+    <p style="color:red">{{ erro }}</p>
+{% endif %}
+<form method="post">
+    {% csrf_token %}
+    <label>Utilizador: <input type="text" name="username"></label><br>
+    <label>Password: <input type="password" name="password"></label><br>
+    <button type="submit">Entrar</button>
+</form>
+<p>Não tens conta? <a href="{% url 'accounts:register' %}">Regista-te</a></p>
+{% endblock %}

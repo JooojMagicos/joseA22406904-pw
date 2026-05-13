@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "pessoas",
     "escola",
     "portfolio",
+    "accounts",
 ]
 
 MIDDLEWARE = [
@@ -139,3 +140,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'escola/static'),   
 ]
+
+#coisas pra login
+LOGIN_URL = '/accounts/login'
+LOGIN_REDIRECT_URL = '/portfolio/'
+LOGOUT_REDIRECT_URL = '/portfolio/'
