@@ -1,5 +1,25 @@
 from django.db import models
 
+
+class TipoTecnologia(models.Model):
+    OPCOES = [
+        ('frontend', 'Frontend'),
+        ('backend', 'Backend'),
+        ('base_dados', 'Base de Dados'),
+        ('storage', 'Storage'),
+        ('outro', 'Outro'),
+    ]
+    nome = models.CharField(max_length=50, choices=OPCOES, unique=True)
+    descricao = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.get_nome_display()
+
+    class Meta:
+        verbose_name = 'Tipo de Tecnologia'
+        verbose_name_plural = 'Tipos de Tecnologia'
+
+
 class Licenciatura(models.Model):
     nome = models.CharField(max_length=200)
     grau = models.CharField(max_length=50)
@@ -33,8 +53,9 @@ class UnidadeCurricular(models.Model):
         return f"{self.codigo} — {self.nome}"
 
 class Tecnologia(models.Model):
+    tipo = models.ForeignKey(TipoTecnologia, null=True, blank=True, on_delete=models.SET_NULL, related_name='tecnologias')
     nome = models.CharField(max_length=100)
-    categoria = models.CharField(max_length=50)
+    categoria = models.CharField(max_length=50, blank=True)
     descricao = models.TextField()
     versao = models.CharField(max_length=20, blank=True)
 

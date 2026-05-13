@@ -1,10 +1,13 @@
 {% extends 'portfolio/base.html' %}
 {% block title %}Formações{% endblock %}
 {% block content %}
-<h1>{{ titulo }}</h1>
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;">
+    <h1 style="margin:0;">{{ titulo }}</h1>
+    <a href="{% url 'portfolio:formacao_criar' %}" class="btn-add">+ Nova Formação</a>
+</div>
 <table>
     <thead>
-        <tr><th>#</th><th>Nome</th><th>Instituição</th><th>Tipo</th><th>Início</th><th>Fim</th></tr>
+        <tr><th>#</th><th>Nome</th><th>Instituição</th><th>Tipo</th><th>Início</th><th>Fim</th><th>Ações</th></tr>
     </thead>
     <tbody>
         {% for f in formacoes %}
@@ -15,9 +18,13 @@
             <td><span class="badge badge-gray">{{ f.tipo }}</span></td>
             <td>{{ f.data_inicio }}</td>
             <td>{{ f.data_fim|default:"Em curso" }}</td>
+            <td>
+                <a href="{% url 'portfolio:formacao_editar' f.pk %}" class="btn-edit">Editar</a>
+                <a href="{% url 'portfolio:formacao_apagar' f.pk %}" class="btn-del">Apagar</a>
+            </td>
         </tr>
         {% empty %}
-        <tr><td colspan="6" class="empty">Nenhuma formação registada.</td></tr>
+        <tr><td colspan="7" class="empty">Nenhuma formação registada.</td></tr>
         {% endfor %}
     </tbody>
 </table>

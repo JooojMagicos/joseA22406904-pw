@@ -1,0 +1,294 @@
+{% extends 'portfolio/base.html' %}
+{% block title %}Sobre esta Aplicação{% endblock %}
+{% block content %}
+<h1>Sobre esta Aplicação</h1>
+
+<!-- ── 1. Arquitetura MVT ──────────────────────────────────────────── -->
+<section class="sobre-section">
+    <h2>1. Arquitetura MVT do Django</h2>
+    <p>
+        O Django segue o padrão <strong>MVT — Model, View, Template</strong>, uma variante do clássico MVC
+        adaptada ao contexto web. Os três componentes têm responsabilidades bem distintas:
+    </p>
+    <ul>
+        <li><strong>Model</strong> — Define a estrutura dos dados e comunica com a base de dados via ORM.
+            Cada classe em <code>models.py</code> corresponde a uma tabela na BD.</li>
+        <li><strong>View</strong> — Contém a lógica de negócio. Recebe o pedido HTTP, interage com os
+            Models e retorna uma resposta (normalmente renderizando um Template).</li>
+        <li><strong>Template</strong> — Ficheiro HTML com a linguagem de template do Django
+            (<code>{% verbatim %}{{ variavel }}{% endverbatim %}</code>,
+            <code>{% verbatim %}{% for %}{% endverbatim %}</code>, etc.)
+            que gera o HTML final enviado ao browser.</li>
+    </ul>
+
+    <h3>Fluxo de informação</h3>
+    <ol>
+        <li>O utilizador clica num link ou submete um formulário no <strong>browser</strong>.</li>
+        <li>O Django analisa o URL e, através do <code>urls.py</code>, mapeia-o para uma função <strong>View</strong>.</li>
+        <li>A View consulta ou altera os dados através dos <strong>Models</strong> (ORM → SQLite).</li>
+        <li>A View passa os dados ao <strong>Template</strong>, que os renderiza em HTML.</li>
+        <li>O HTML é devolvido ao browser como resposta HTTP.</li>
+    </ol>
+
+    <div class="desenho-box">
+        <p style="color:#888;font-style:italic;text-align:center;">
+            [Fotografar aqui o desenho em papel da arquitetura MVT e substituir esta linha pela imagem]
+        </p>
+        <!-- Exemplo de como incluir a imagem após tirar a fotografia:
+        <img src="/media/makingof/mvt_desenho.jpg" alt="Arquitetura MVT desenhada em papel" style="max-width:100%;border-radius:6px;">
+        -->
+    </div>
+
+    <h3>Vídeo-tutorial: criar uma página com formulário para novo projeto</h3>
+    <div style="margin-top:0.8rem;">
+        <iframe width="700" height="394"
+            src="https://www.youtube.com/embed/VIDEO_ID_AQUI"
+            title="Tutorial Django — Criar Projeto com Formulário"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+            style="max-width:100%;border-radius:6px;">
+        </iframe>
+        <p style="color:#888;font-size:0.82rem;margin-top:0.4rem;">
+            Substitua <code>VIDEO_ID_AQUI</code> pelo ID do vídeo no YouTube após gravar o tutorial.
+        </p>
+    </div>
+</section>
+
+<!-- ── 2. Modelação ───────────────────────────────────────────────── -->
+<section class="sobre-section">
+    <h2>2. Modelação</h2>
+
+    <h3>Diagrama Entidade-Relação</h3>
+    <div class="desenho-box">
+        {% if der_foto %}
+            <img src="{{ der_foto.url }}" alt="Diagrama ER" style="max-width:100%;border-radius:6px;">
+        {% else %}
+            <img src="/media/makingof/der.jpeg" alt="Diagrama ER" style="max-width:100%;border-radius:6px;"
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+            <p style="color:#888;font-style:italic;text-align:center;display:none;">
+                [Diagrama ER não encontrado — adicione o ficheiro em media/makingof/der.jpeg]
+            </p>
+        {% endif %}
+    </div>
+
+    <h3>Modelação em <code>models.py</code></h3>
+    <pre class="code-block">
+class TipoTecnologia(models.Model):
+    nome = models.CharField(max_length=50, choices=OPCOES, unique=True)
+    descricao = models.TextField(blank=True)
+
+class Tecnologia(models.Model):
+    tipo = models.ForeignKey(TipoTecnologia, null=True, blank=True, on_delete=models.SET_NULL)
+    nome = models.CharField(max_length=100)
+    descricao = models.TextField()
+    versao = models.CharField(max_length=20, blank=True)
+
+class Projeto(models.Model):
+    uc = models.ForeignKey(UnidadeCurricular, on_delete=models.CASCADE)
+    tecnologias = models.ManyToManyField(Tecnologia, related_name='projetos')
+    titulo = models.CharField(max_length=200)
+    descricao = models.TextField()
+    ano = models.IntegerField()
+
+class Competencia(models.Model):
+    nome = models.CharField(max_length=100)
+    tipo = models.CharField(max_length=50)
+    descricao = models.TextField()
+    tecnologias = models.ManyToManyField(Tecnologia, blank=True)
+    projetos = models.ManyToManyField(Projeto, blank=True)
+    formacoes = models.ManyToManyField('Formacao', blank=True)
+
+class Formacao(models.Model):
+    nome = models.CharField(max_length=200)
+    instituicao = models.CharField(max_length=200)
+    tipo = models.CharField(max_length=50)
+    data_inicio = models.DateField()
+    data_fim = models.DateField(null=True, blank=True)
+    </pre>
+</section>
+
+<!-- ── 3. Tecnologias ─────────────────────────────────────────────── -->
+<section class="sobre-section">
+    <h2>3. Tecnologias Utilizadas</h2>
+    <p>
+        As tecnologias usadas nesta aplicação estão organizadas por tipo.
+        São as mesmas registadas no portfólio e associadas ao projeto <em>Portfolio de Programação Web</em>.
+    </p>
+
+    {% for tipo, techs in tecnologias_por_tipo.items %}
+    <h3>{{ tipo }}</h3>
+    <div class="tech-grid">
+        {% for t in techs %}
+        <div class="tech-card">
+            <div class="tech-nome">{{ t.nome }}{% if t.versao %} <small>v{{ t.versao }}</small>{% endif %}</div>
+            <div class="tech-desc">{{ t.descricao }}</div>
+        </div>
+        {% empty %}
+        <p style="color:#888;font-style:italic;">Sem tecnologias associadas a este tipo.</p>
+        {% endfor %}
+    </div>
+    {% empty %}
+    <p style="color:#888;font-style:italic;">
+        Adicione tipos de tecnologia em
+        <a href="{% url 'portfolio:tipotecnologias' %}">Tipos de Tecnologia</a>
+        e associe cada tecnologia ao seu tipo na página
+        <a href="{% url 'portfolio:tecnologias' %}">Tecnologias</a>.
+    </p>
+    {% endfor %}
+
+    {% if sem_tipo %}
+    <h3>Sem tipo definido</h3>
+    <div class="tech-grid">
+        {% for t in sem_tipo %}
+        <div class="tech-card">
+            <div class="tech-nome">{{ t.nome }}</div>
+            <div class="tech-desc">{{ t.descricao }}</div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</section>
+
+<!-- ── 4. Estrutura de Navegação ──────────────────────────────────── -->
+<section class="sobre-section">
+    <h2>4. Estrutura de Navegação</h2>
+    <div class="desenho-box">
+        <p style="color:#888;font-style:italic;text-align:center;">
+            [Inserir aqui o mapa de navegação desenhado em papel — fotografia ou diagrama]
+        </p>
+    </div>
+    <p>A aplicação tem a seguinte estrutura de páginas:</p>
+    <ul>
+        <li><strong>/portfolio/</strong> — Página inicial com estatísticas</li>
+        <li><strong>/portfolio/projetos/</strong> — Lista + CRUD de projetos</li>
+        <li><strong>/portfolio/tecnologias/</strong> — Lista + CRUD de tecnologias</li>
+        <li><strong>/portfolio/tipotecnologias/</strong> — Lista + CRUD de tipos de tecnologia</li>
+        <li><strong>/portfolio/competencias/</strong> — Lista + CRUD de competências</li>
+        <li><strong>/portfolio/formacoes/</strong> — Lista + CRUD de formações</li>
+        <li><strong>/portfolio/tfcs/</strong> — Lista de Trabalhos de Fim de Curso</li>
+        <li><strong>/portfolio/eventos/</strong> — Lista de eventos</li>
+        <li><strong>/portfolio/ucs/</strong> — Lista de Unidades Curriculares</li>
+        <li><strong>/portfolio/licenciaturas/</strong> — Lista de Licenciaturas</li>
+        <li><strong>/portfolio/docentes/</strong> — Lista de Docentes</li>
+        <li><strong>/portfolio/sobre/</strong> — Esta página</li>
+    </ul>
+</section>
+
+<!-- ── 5. Repositório GitHub ──────────────────────────────────────── -->
+<section class="sobre-section">
+    <h2>5. Repositório GitHub</h2>
+    <p>
+        O código fonte desta aplicação está disponível no GitHub:<br>
+        <a href="https://github.com/SEU_UTILIZADOR/SEU_REPOSITORIO" target="_blank" style="color:#4ecca3;font-weight:600;">
+            github.com/SEU_UTILIZADOR/SEU_REPOSITORIO
+        </a>
+        <br><small style="color:#888;">(Substitua pelo link real do repositório)</small>
+    </p>
+    <h3>Como usei o Git e o GitHub</h3>
+    <p>
+        Ao longo do desenvolvimento usei o Git para controlo de versões, fazendo commits regulares a cada
+        funcionalidade concluída. O GitHub serviu como repositório remoto e backup do projeto.
+        As principais vantagens foram:
+    </p>
+    <ul>
+        <li>Histórico completo de todas as alterações feitas ao código</li>
+        <li>Possibilidade de reverter para versões anteriores em caso de erro</li>
+        <li>Trabalho organizado com commits descritivos por laboratório</li>
+        <li>Facilidade de aceder ao código a partir de qualquer máquina</li>
+    </ul>
+</section>
+
+<!-- ── 6. Making-Of ───────────────────────────────────────────────── -->
+<section class="sobre-section">
+    <h2>6. Making-Of</h2>
+    <p>
+        Nesta secção reúno os apontamentos sobre o processo de desenvolvimento — dificuldades,
+        decisões, erros encontrados e o que aprendi em cada fase do projeto.
+    </p>
+    {% if making_of %}
+    <table>
+        <thead>
+            <tr><th>Fase</th><th>Entidade</th><th>Data</th><th>Descrição</th></tr>
+        </thead>
+        <tbody>
+            {% for m in making_of %}
+            <tr>
+                <td><span class="badge badge-gray">{{ m.fase }}</span></td>
+                <td>{{ m.entidade_relacionada }}</td>
+                <td>{{ m.data_registo }}</td>
+                <td>{{ m.descricao|truncatewords:20 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="color:#888;font-style:italic;">Ainda não há registos de making-of. Adicione-os pelo painel de administração.</p>
+    {% endif %}
+</section>
+
+<style>
+    .sobre-section {
+        background: #fff;
+        border-radius: 8px;
+        padding: 1.8rem 2rem;
+        margin-bottom: 1.8rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    }
+    .sobre-section h2 {
+        font-size: 1.25rem;
+        color: #1a1a2e;
+        border-left: 4px solid #4ecca3;
+        padding-left: 0.7rem;
+        margin-bottom: 1rem;
+    }
+    .sobre-section h3 {
+        font-size: 1rem;
+        color: #1a1a2e;
+        margin: 1.2rem 0 0.5rem;
+    }
+    .sobre-section ul, .sobre-section ol {
+        padding-left: 1.5rem;
+        line-height: 1.9;
+        font-size: 0.92rem;
+    }
+    .sobre-section p { font-size: 0.92rem; line-height: 1.7; }
+    .desenho-box {
+        border: 2px dashed #c8e6da;
+        border-radius: 6px;
+        padding: 1.5rem;
+        margin: 1rem 0;
+        background: #f8fefc;
+    }
+    .code-block {
+        background: #1a1a2e;
+        color: #4ecca3;
+        padding: 1rem 1.2rem;
+        border-radius: 6px;
+        font-size: 0.82rem;
+        overflow-x: auto;
+        white-space: pre;
+        line-height: 1.6;
+    }
+    .tech-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 1rem;
+        margin: 0.8rem 0 1.2rem;
+    }
+    .tech-card {
+        background: #f4f6f9;
+        border-radius: 6px;
+        padding: 0.9rem 1rem;
+        border-left: 3px solid #4ecca3;
+    }
+    .tech-nome {
+        font-weight: 600;
+        font-size: 0.92rem;
+        color: #1a1a2e;
+        margin-bottom: 0.3rem;
+    }
+    .tech-nome small { color: #888; font-weight: normal; }
+    .tech-desc { font-size: 0.82rem; color: #555; line-height: 1.5; }
+</style>
+{% endblock %}

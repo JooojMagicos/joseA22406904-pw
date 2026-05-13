@@ -1,0 +1,16 @@
+{% extends 'portfolio/base.html' %}
+{% block title %}{{ titulo }}{% endblock %}
+{% block content %}
+<h1>{{ titulo }}</h1>
+<div style="background:#fff;border-radius:8px;padding:2rem;max-width:500px;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+    <p style="margin-bottom:1.5rem;font-size:0.95rem;color:#444;">
+        Tem a certeza que pretende apagar <strong>{{ objeto }}</strong>?<br>
+        <span style="color:#c0392b;font-size:0.85rem;">Esta operação não pode ser desfeita.</span>
+    </p>
+    <form method="post" style="display:flex;gap:1rem;">
+        {% csrf_token %}
+        <button type="submit" style="background:#e74c3c;color:#fff;border:none;padding:0.55rem 1.4rem;border-radius:5px;font-weight:600;cursor:pointer;">Apagar</button>
+        <a href="{% url cancelar_url %}" style="background:#e0e0e0;color:#333;padding:0.55rem 1.2rem;border-radius:5px;text-decoration:none;">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

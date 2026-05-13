@@ -1,0 +1,39 @@
+{% extends 'portfolio/base.html' %}
+{% block title %}{{ titulo }}{% endblock %}
+{% block content %}
+<h1>{{ titulo }}</h1>
+<form method="post" style="max-width:700px;">
+    {% csrf_token %}
+    <table class="form-table">
+        {% for field in form %}
+        <tr>
+            <th style="width:200px;padding:0.6rem 1rem 0.6rem 0;vertical-align:top;font-size:0.9rem;color:#444;">
+                {{ field.label_tag }}
+            </th>
+            <td style="padding:0.4rem 0;">
+                {{ field }}
+                {% if field.errors %}
+                    <div style="color:#c0392b;font-size:0.82rem;margin-top:0.3rem;">{{ field.errors }}</div>
+                {% endif %}
+                {% if field.help_text %}
+                    <div style="color:#888;font-size:0.8rem;margin-top:0.2rem;">{{ field.help_text }}</div>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <div style="margin-top:1.5rem;display:flex;gap:1rem;">
+        <button type="submit" style="background:#4ecca3;color:#1a1a2e;border:none;padding:0.55rem 1.4rem;border-radius:5px;font-weight:600;cursor:pointer;font-size:0.95rem;">Guardar</button>
+        <a href="{% url cancelar_url %}" style="background:#e0e0e0;color:#333;padding:0.55rem 1.2rem;border-radius:5px;text-decoration:none;font-size:0.95rem;">Cancelar</a>
+    </div>
+</form>
+<style>
+    input[type=text],input[type=number],input[type=url],input[type=email],input[type=date],
+    select,textarea{
+        width:100%;padding:0.45rem 0.6rem;border:1px solid #ccc;border-radius:4px;
+        font-family:inherit;font-size:0.9rem;box-sizing:border-box;
+    }
+    input[type=checkbox]{margin-right:0.4rem;}
+    ul.errorlist{list-style:none;padding:0;margin:0;}
+</style>
+{% endblock %}

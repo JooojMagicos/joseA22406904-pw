@@ -1,22 +1,30 @@
 {% extends 'portfolio/base.html' %}
 {% block title %}Tecnologias{% endblock %}
 {% block content %}
-<h1>{{ titulo }}</h1>
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;">
+    <h1 style="margin:0;">{{ titulo }}</h1>
+    <a href="{% url 'portfolio:tecnologia_criar' %}" class="btn-add">+ Nova Tecnologia</a>
+</div>
 <table>
     <thead>
-        <tr><th>#</th><th>Nome</th><th>Categoria</th><th>Versão</th><th>Descrição</th></tr>
+        <tr><th>#</th><th>Nome</th><th>Tipo</th><th>Categoria</th><th>Versão</th><th>Descrição</th><th>Ações</th></tr>
     </thead>
     <tbody>
         {% for t in tecnologias %}
         <tr>
             <td>{{ forloop.counter }}</td>
             <td><strong>{{ t.nome }}</strong></td>
-            <td><span class="badge">{{ t.categoria }}</span></td>
+            <td>{% if t.tipo %}<span class="badge">{{ t.tipo }}</span>{% else %}—{% endif %}</td>
+            <td>{{ t.categoria|default:"—" }}</td>
             <td>{{ t.versao|default:"—" }}</td>
-            <td>{{ t.descricao|truncatewords:15 }}</td>
+            <td>{{ t.descricao|truncatewords:12 }}</td>
+            <td>
+                <a href="{% url 'portfolio:tecnologia_editar' t.pk %}" class="btn-edit">Editar</a>
+                <a href="{% url 'portfolio:tecnologia_apagar' t.pk %}" class="btn-del">Apagar</a>
+            </td>
         </tr>
         {% empty %}
-        <tr><td colspan="5" class="empty">Nenhuma tecnologia registada.</td></tr>
+        <tr><td colspan="7" class="empty">Nenhuma tecnologia registada.</td></tr>
         {% endfor %}
     </tbody>
 </table>
