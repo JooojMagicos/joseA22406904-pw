@@ -104,18 +104,22 @@
             font-weight: 600;
             margin: 0.1rem;
         }
-
-        .badge-gray {
-            background: #e0e0e0;
-            color: #555;
+        .badge-gray { background: #e0e0e0; color: #555; }
+        .empty { text-align: center; color: #888; padding: 2rem; font-style: italic; }
+        .btn-add {
+            background: #4ecca3; color: #1a1a2e; padding: 0.4rem 1rem;
+            border-radius: 5px; text-decoration: none; font-weight: 600; font-size: 0.88rem;
         }
-
-        .empty {
-            text-align: center;
-            color: #888;
-            padding: 2rem;
-            font-style: italic;
+        .btn-edit {
+            background: #f0a500; color: #fff; padding: 0.25rem 0.7rem;
+            border-radius: 4px; text-decoration: none; font-size: 0.82rem; margin-right: 0.3rem;
         }
+        .btn-del {
+            background: #e74c3c; color: #fff; padding: 0.25rem 0.7rem;
+            border-radius: 4px; text-decoration: none; font-size: 0.82rem;
+        }
+        .btn-add:hover { opacity: 0.88; }
+        .btn-edit:hover, .btn-del:hover { opacity: 0.85; }
     </style>
 </head>
 
@@ -139,7 +143,8 @@
         <a href="{% url 'portfolio:ucs' %}">UCs</a>
         <a href="{% url 'portfolio:licenciaturas' %}">Licenciaturas</a>
         <a href="{% url 'portfolio:docentes' %}">Docentes</a>
-
+        <a href="{% url 'portfolio:tipotecnologias' %}">Tipos Tec.</a>
+        <a href="{% url 'portfolio:sobre' %}" style="color:#4ecca3;">Sobre</a>
     </nav>
     <div class="container">
         {% block content %}{% endblock %}
